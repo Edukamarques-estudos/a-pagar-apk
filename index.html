@@ -137,6 +137,118 @@
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
+
+    /* ================= TELA DE LOGIN / CADASTRO ================= */
+    #authScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    .auth-card {
+      background: var(--surface);
+      color: var(--text);
+      width: 100%;
+      max-width: 400px;
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+    }
+
+    .auth-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: #2563eb;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin: 0 auto 14px auto;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+    }
+
+    .auth-title {
+      text-align: center;
+      font-size: 1.32rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .auth-subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+    }
+
+    .auth-tab-btn {
+      background: transparent;
+      color: var(--muted);
+      padding: 8px;
+      border-radius: 9px;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .auth-tab-btn.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .auth-error {
+      background: var(--danger-bg);
+      color: var(--danger);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 9px 12px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .auth-error.visible {
+      display: block;
+    }
+
+    .auth-check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+
+    .auth-check-row input {
+      margin-top: 2px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+    }
+
     /* ================= TELA INICIAL (HOME) ================= */
     #homeScreen {
       min-height: 100vh;
@@ -1442,7 +1554,61 @@
 <body>
 
 <!-- ==================== TELA INICIAL (APRESENTAÇÃO) ==================== -->
-<div id="homeScreen">
+<!-- ==================== TELA DE LOGIN / CADASTRO ==================== -->
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">R$</div>
+    <h1 class="auth-title">Controle Financeiro</h1>
+    <p class="auth-subtitle">Acesse sua conta ou crie um novo perfil</p>
+
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">Entrar</button>
+      <button type="button" class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">Criar Conta</button>
+    </div>
+
+    <div id="authErrorBox" class="auth-error"></div>
+
+    <!-- Formulário de Login -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="loginUser">Usuário</label>
+        <input type="text" id="loginUser" placeholder="Digite seu usuário" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%; padding:11px; font-size:0.95rem; margin-top:6px;" id="btnLoginSubmit">
+        Entrar no Aplicativo
+      </button>
+    </form>
+
+    <!-- Formulário de Novo Usuário -->
+    <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label for="regName">Seu Nome</label>
+        <input type="text" id="regName" placeholder="Ex: Eduardo, Karina, João..." required />
+      </div>
+      <div class="form-group">
+        <label for="regUser">Escolha um Usuário (Login)</label>
+        <input type="text" id="regUser" placeholder="Sem espaços (ex: eduardo)" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="regPass">Crie uma Senha</label>
+        <input type="password" id="regPass" placeholder="Mínimo 4 caracteres" minlength="4" autocomplete="new-password" required />
+      </div>
+      <label class="auth-check-row" for="regIsOwner">
+        <input type="checkbox" id="regIsOwner" />
+        <span><strong>Sou o dono principal (Eduardo):</strong> vincular esta conta aos dados já preenchidos anteriormente no banco. (Deixe desmarcado para iniciar um banco 100% em branco).</span>
+      </label>
+      <button type="submit" class="btn-primary" style="width:100%; padding:11px; font-size:0.95rem;" id="btnRegSubmit">
+        Criar Conta e Acessar
+      </button>
+    </form>
+  </div>
+</div>
+
+<div id="homeScreen" class="hidden">
   <header class="home-header">
     <div class="home-header-inner">
       <div class="home-left">
@@ -1453,7 +1619,7 @@
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
-        <span class="home-username">OPÇÕES</span>
+        <span class="home-username" id="homeUserGreeting">OPÇÕES</span>
       </div>
 
       <div class="home-right">
@@ -1713,6 +1879,10 @@
     <button type="button" class="drawer-item" onclick="toggleTheme()">
       🌓 Alternar Tema Claro / Escuro
     </button>
+
+    <button type="button" class="drawer-item" style="color: var(--danger); border-color: rgba(214, 40, 40, 0.3);" onclick="logoutUser()">
+      🚪 Sair / Trocar Usuário
+    </button>
   </aside>
 </div>
 
@@ -1899,13 +2069,213 @@
   const app = initializeApp({ databaseURL: FIREBASE_DATABASE_URL });
   const db = getDatabase(app);
 
-  // Referências no Firebase
-  const refs = {
-    lancamentos: ref(db, 'lancamentos'),
-    contasLegacy: ref(db, 'contas'),
-    carroLegacy: ref(db, 'carro'),
-    configTypes: ref(db, 'config/types'),
-    configCategories: ref(db, 'config/categories')
+  // ================= AUTENTICAÇÃO E ISOLAMENTO DE BANCO POR USUÁRIO =================
+  let currentUser = null;
+  let activeListeners = [];
+
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password + "_fin_salt_2026");
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function sanitizeUsername(raw) {
+    return String(raw || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9._-]/g, '');
+  }
+
+  function showAuthError(msg) {
+    const box = document.getElementById('authErrorBox');
+    box.textContent = msg;
+    box.classList.add('visible');
+  }
+
+  function clearAuthError() {
+    const box = document.getElementById('authErrorBox');
+    box.textContent = '';
+    box.classList.remove('visible');
+  }
+
+  window.switchAuthTab = function(tab) {
+    clearAuthError();
+    const isLogin = tab === 'login';
+    document.getElementById('tabLoginBtn').classList.toggle('active', isLogin);
+    document.getElementById('tabRegisterBtn').classList.toggle('active', !isLogin);
+    document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
+    document.getElementById('registerForm').classList.toggle('hidden', isLogin);
+  };
+
+  function getUserDbPaths() {
+    if (!currentUser || currentUser.isLegacyOwner) {
+      return {
+        lancamentosPath: 'lancamentos',
+        contasLegacyPath: 'contas',
+        carroLegacyPath: 'carro',
+        configTypesPath: 'config/types',
+        configCategoriesPath: 'config/categories'
+      };
+    }
+    const base = `workspaces/${currentUser.username}`;
+    return {
+      lancamentosPath: `${base}/lancamentos`,
+      contasLegacyPath: null,
+      carroLegacyPath: null,
+      configTypesPath: `${base}/config/types`,
+      configCategoriesPath: `${base}/config/categories`
+    };
+  }
+
+  function detachFirebaseListeners() {
+    activeListeners.forEach(unsub => {
+      try { if (typeof unsub === 'function') unsub(); } catch (e) {}
+    });
+    activeListeners = [];
+  }
+
+  window.handleLogin = async function(event) {
+    event.preventDefault();
+    clearAuthError();
+    const btn = document.getElementById('btnLoginSubmit');
+    const rawUser = document.getElementById('loginUser').value;
+    const pass = document.getElementById('loginPass').value;
+    const username = sanitizeUsername(rawUser);
+
+    if (!username || !pass) {
+      showAuthError('Preencha usuário e senha.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+
+    try {
+      const userSnap = await new Promise((resolve, reject) => {
+        onValue(ref(db, `users/${username}`), resolve, reject, { onlyOnce: true });
+      });
+
+      const userData = userSnap.val();
+      if (!userData) {
+        showAuthError('Usuário não encontrado. Clique em "Criar Conta" para cadastrar.');
+        btn.disabled = false;
+        btn.textContent = 'Entrar no Aplicativo';
+        return;
+      }
+
+      const passHash = await hashPassword(pass);
+      if (userData.passwordHash !== passHash) {
+        showAuthError('Senha incorreta. Tente novamente.');
+        btn.disabled = false;
+        btn.textContent = 'Entrar no Aplicativo';
+        return;
+      }
+
+      startUserSession({
+        username: userData.username,
+        displayName: userData.displayName || userData.username,
+        isLegacyOwner: Boolean(userData.isLegacyOwner)
+      });
+    } catch (err) {
+      console.error(err);
+      showAuthError('Erro ao conectar ao servidor. Verifique sua internet.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Entrar no Aplicativo';
+    }
+  };
+
+  window.handleRegister = async function(event) {
+    event.preventDefault();
+    clearAuthError();
+    const btn = document.getElementById('btnRegSubmit');
+    const displayName = document.getElementById('regName').value.trim();
+    const rawUser = document.getElementById('regUser').value;
+    const pass = document.getElementById('regPass').value;
+    const isLegacyOwner = document.getElementById('regIsOwner').checked;
+    const username = sanitizeUsername(rawUser);
+
+    if (username.length < 3) {
+      showAuthError('O usuário deve ter pelo menos 3 letras ou números.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Criando conta...';
+
+    try {
+      const existingSnap = await new Promise((resolve, reject) => {
+        onValue(ref(db, `users/${username}`), resolve, reject, { onlyOnce: true });
+      });
+
+      if (existingSnap.exists()) {
+        showAuthError('Este nome de usuário já está em uso. Escolha outro.');
+        btn.disabled = false;
+        btn.textContent = 'Criar Conta e Acessar';
+        return;
+      }
+
+      const passwordHash = await hashPassword(pass);
+      const newUserObj = {
+        username,
+        displayName: displayName || username,
+        passwordHash,
+        isLegacyOwner,
+        createdAt: new Date().toISOString()
+      };
+
+      await set(ref(db, `users/${username}`), newUserObj);
+
+      startUserSession({
+        username,
+        displayName: newUserObj.displayName,
+        isLegacyOwner
+      });
+    } catch (err) {
+      console.error(err);
+      showAuthError('Não foi possível criar a conta agora. Tente novamente.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Criar Conta e Acessar';
+    }
+  };
+
+  function startUserSession(userObj) {
+    currentUser = userObj;
+    localStorage.setItem('fin_logged_user', JSON.stringify(userObj));
+
+    // Limpar estado em memória antes de carregar a base do usuário
+    rawBuckets = { lancamentos: [], contasLegacy: [], carroLegacy: [] };
+    selectedDescs.clear();
+    selectedTypes.clear();
+    selectedCats.clear();
+
+    const greetingEl = document.getElementById('homeUserGreeting');
+    if (greetingEl) {
+      greetingEl.textContent = `OLÁ, ${userObj.displayName.toUpperCase()}`;
+    }
+
+    document.getElementById('authScreen').classList.add('hidden');
+    goHome();
+    attachUserFirebaseListeners();
+  }
+
+  window.logoutUser = function() {
+    closeDrawer();
+    detachFirebaseListeners();
+    currentUser = null;
+    localStorage.removeItem('fin_logged_user');
+    rawBuckets = { lancamentos: [], contasLegacy: [], carroLegacy: [] };
+    document.getElementById('homeScreen').classList.add('hidden');
+    document.getElementById('appScreens').classList.add('hidden');
+    document.getElementById('btnNewItem').classList.add('hidden');
+    document.getElementById('loginForm').reset();
+    clearAuthError();
+    document.getElementById('authScreen').classList.remove('hidden');
   };
 
   const DEFAULT_TYPES = [
@@ -1945,7 +2315,6 @@
   let periodMode = 'month';
   let lastPaidBill = null;
 
-  // Conjuntos de filtros múltiplos selecionados
   let selectedDescs = new Set();
   let selectedTypes = new Set();
   let selectedCats = new Set();
@@ -1988,10 +2357,11 @@
   monthFilter.value = getCurrentMonthStr();
 
   function getAllRecords() {
+    const paths = getUserDbPaths();
     return [
       ...rawBuckets.lancamentos.map(item => ({
         ...item,
-        _source: 'lancamentos',
+        _source: paths.lancamentosPath,
         launchType: item.launchType || 'Conta a Pagar',
         nature: item.nature || getNatureByTypeName(item.launchType || 'Conta a Pagar')
       })),
@@ -2029,65 +2399,74 @@
     if (currentPage === 'financeiro') render();
   }
 
-  // Escuta configurações de Tipos na ADM
-  onValue(refs.configTypes, (snapshot) => {
-    const val = snapshot.val();
-    if (val && Array.isArray(val) && val.length > 0) {
-      customTypes = val;
-    } else if (val && typeof val === 'object') {
-      customTypes = Object.values(val);
-    } else {
-      customTypes = [...DEFAULT_TYPES];
+  function attachUserFirebaseListeners() {
+    detachFirebaseListeners();
+    const paths = getUserDbPaths();
+
+    const u1 = onValue(ref(db, paths.configTypesPath), (snapshot) => {
+      const val = snapshot.val();
+      if (val && Array.isArray(val) && val.length > 0) {
+        customTypes = val;
+      } else if (val && typeof val === 'object') {
+        customTypes = Object.values(val);
+      } else {
+        customTypes = [...DEFAULT_TYPES];
+      }
+      renderAdmConfig();
+      refreshMultiFilterOptions();
+      if (currentPage === 'financeiro') render();
+    });
+    activeListeners.push(u1);
+
+    const u2 = onValue(ref(db, paths.configCategoriesPath), (snapshot) => {
+      const val = snapshot.val();
+      let loaded = [];
+      if (val && Array.isArray(val) && val.length > 0) {
+        loaded = val;
+      } else if (val && typeof val === 'object') {
+        loaded = Object.values(val);
+      } else {
+        loaded = [...DEFAULT_CATEGORIES];
+      }
+      customCategories = [...loaded].sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+      renderAdmConfig();
+      refreshMultiFilterOptions();
+    });
+    activeListeners.push(u2);
+
+    const u3 = onValue(ref(db, paths.lancamentosPath), (snapshot) => {
+      const data = snapshot.val();
+      rawBuckets.lancamentos = data ? Object.values(data) : [];
+      syncStatus.textContent = "Sincronizado";
+      syncStatus.classList.remove("offline");
+      syncStatusHome.textContent = "● Nuvem ativa";
+      onDataUpdated();
+    }, (error) => {
+      console.error(error);
+      syncStatus.textContent = "Erro de conexão";
+      syncStatus.classList.add("offline");
+      syncStatusHome.textContent = "Offline";
+    });
+    activeListeners.push(u3);
+
+    if (paths.contasLegacyPath) {
+      const u4 = onValue(ref(db, paths.contasLegacyPath), (snapshot) => {
+        const data = snapshot.val();
+        rawBuckets.contasLegacy = data ? Object.values(data) : [];
+        onDataUpdated();
+      });
+      activeListeners.push(u4);
     }
-    renderAdmConfig();
-    refreshMultiFilterOptions();
-    if (currentPage === 'financeiro') render();
-  });
 
-  // Escuta configurações de Categorias na ADM (sempre em ordem alfabética)
-  onValue(refs.configCategories, (snapshot) => {
-    const val = snapshot.val();
-    let loaded = [];
-    if (val && Array.isArray(val) && val.length > 0) {
-      loaded = val;
-    } else if (val && typeof val === 'object') {
-      loaded = Object.values(val);
-    } else {
-      loaded = [...DEFAULT_CATEGORIES];
+    if (paths.carroLegacyPath) {
+      const u5 = onValue(ref(db, paths.carroLegacyPath), (snapshot) => {
+        const data = snapshot.val();
+        rawBuckets.carroLegacy = data ? Object.values(data) : [];
+        onDataUpdated();
+      });
+      activeListeners.push(u5);
     }
-    customCategories = [...loaded].sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
-    renderAdmConfig();
-    refreshMultiFilterOptions();
-  });
-
-  // Escuta base unificada
-  onValue(refs.lancamentos, (snapshot) => {
-    const data = snapshot.val();
-    rawBuckets.lancamentos = data ? Object.values(data) : [];
-    syncStatus.textContent = "Sincronizado";
-    syncStatus.classList.remove("offline");
-    syncStatusHome.textContent = "● Nuvem ativa";
-    onDataUpdated();
-  }, (error) => {
-    console.error(error);
-    syncStatus.textContent = "Erro de conexão";
-    syncStatus.classList.add("offline");
-    syncStatusHome.textContent = "Offline";
-  });
-
-  // Escuta registros antigos de contas
-  onValue(refs.contasLegacy, (snapshot) => {
-    const data = snapshot.val();
-    rawBuckets.contasLegacy = data ? Object.values(data) : [];
-    onDataUpdated();
-  });
-
-  // Escuta registros antigos de carro
-  onValue(refs.carroLegacy, (snapshot) => {
-    const data = snapshot.val();
-    rawBuckets.carroLegacy = data ? Object.values(data) : [];
-    onDataUpdated();
-  });
+  }
 
   // ================= ADM: CADASTRO DE TIPOS E CATEGORIAS =================
   function renderAdmConfig() {
@@ -2140,7 +2519,7 @@
     }
 
     const updated = [...customTypes, { id: 't_' + Date.now(), name, nature }];
-    await set(refs.configTypes, updated);
+    await set(ref(db, getUserDbPaths().configTypesPath), updated);
     nameInput.value = '';
   };
 
@@ -2151,7 +2530,7 @@
     }
     if (!confirm(`Remover o tipo "${customTypes[index].name}"?`)) return;
     const updated = customTypes.filter((_, i) => i !== index);
-    await set(refs.configTypes, updated);
+    await set(ref(db, getUserDbPaths().configTypesPath), updated);
   };
 
   window.addCategoryItem = async function() {
@@ -2165,7 +2544,7 @@
     }
 
     const updated = [...customCategories, name].sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
-    await set(refs.configCategories, updated);
+    await set(ref(db, getUserDbPaths().configCategoriesPath), updated);
     input.value = '';
   };
 
@@ -2184,7 +2563,7 @@
       .map(c => (c === oldName ? newName : c))
       .sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
 
-    await set(refs.configCategories, updatedCats);
+    await set(ref(db, getUserDbPaths().configCategoriesPath), updatedCats);
 
     // Atualiza também os lançamentos existentes que usavam o nome antigo da categoria
     const all = getAllRecords();
@@ -2192,7 +2571,7 @@
     let hasUpdates = false;
     all.forEach(item => {
       if (item.category === oldName && item.id) {
-        const path = item._source || 'lancamentos';
+        const path = item._source || getUserDbPaths().lancamentosPath;
         batchUpdates[`${path}/${item.id}/category`] = newName;
         hasUpdates = true;
       }
@@ -2211,7 +2590,7 @@
     const updated = customCategories
       .filter(c => c !== catName)
       .sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
-    await set(refs.configCategories, updated);
+    await set(ref(db, getUserDbPaths().configCategoriesPath), updated);
   };
 
   // ================= RESUMO DOS FILTROS NO CABEÇALHO RETRÁTIL =================
@@ -3031,7 +3410,7 @@
     const notes = document.getElementById('notes').value.trim();
 
     if (editingId) {
-      const targetPath = legacySource || 'lancamentos';
+      const targetPath = legacySource || getUserDbPaths().lancamentosPath;
       const existing = getAllRecords().find(b => b.id === editingId && b._source === targetPath) || {};
       const updatedBill = {
         ...existing,
@@ -3061,7 +3440,7 @@
         paid: false,
         paidAt: null
       };
-      await set(ref(db, `lancamentos/${id}`), newBill);
+      await set(ref(db, `${getUserDbPaths().lancamentosPath}/${id}`), newBill);
     }
 
     closeModal('formModal');
@@ -3074,7 +3453,7 @@
     const bill = getAllRecords().find(b => b.id === id && b._source === source);
     if (!bill) return;
 
-    const targetPath = source || 'lancamentos';
+    const targetPath = source || getUserDbPaths().lancamentosPath;
     const updatedBill = {
       ...bill,
       paid: !bill.paid,
@@ -3116,7 +3495,7 @@
 
   window.deleteBill = async function(id, source) {
     if (!confirm('Deseja realmente excluir este registro?')) return;
-    const targetPath = source || 'lancamentos';
+    const targetPath = source || getUserDbPaths().lancamentosPath;
     await remove(ref(db, `${targetPath}/${id}`));
   };
 
@@ -3435,7 +3814,7 @@
         }
 
         if (count > 0) {
-          await update(refs.lancamentos, updates);
+          await update(ref(db, getUserDbPaths().lancamentosPath), updates);
           alert(`${count} registro(s) importado(s) com sucesso!`);
         } else {
           alert('Nenhuma linha válida encontrada. Verifique os títulos desc, amount e dueDate.');
@@ -3449,6 +3828,19 @@
 
     reader.readAsText(file, 'UTF-8');
   };
+
+  // Restaurar sessão salva automaticamente se já estiver logado
+  try {
+    const savedSession = localStorage.getItem('fin_logged_user');
+    if (savedSession) {
+      const parsedUser = JSON.parse(savedSession);
+      if (parsedUser && parsedUser.username) {
+        startUserSession(parsedUser);
+      }
+    }
+  } catch (e) {
+    localStorage.removeItem('fin_logged_user');
+  }
 </script>
 
 <script>
